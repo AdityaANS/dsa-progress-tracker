@@ -23,12 +23,12 @@ const DEFAULT_TOPICS = [
 export default function Home() {
   const [user, setUser] = useState(null);
 
-  // Initialize with defaults (do not access localStorage directly here)
+  // Default states without direct localStorage access (SSR-safe)
   const [topics, setTopics] = useState(DEFAULT_TOPICS);
   const [lastSolvedDate, setLastSolvedDate] = useState(null);
   const [streak, setStreak] = useState(0);
 
-  // Load from localStorage only on client-side mount
+  // Load localStorage on client
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -50,7 +50,7 @@ export default function Home() {
     }
   }, []);
 
-  // Persist topics when they change
+  // Persist topics
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
@@ -71,7 +71,7 @@ export default function Home() {
     }
   }, [lastSolvedDate, streak]);
 
-  // Firebase auth listener
+  // Firebase user listener
   useEffect(() => {
     const unsub = onUser(async (u) => {
       setUser(u);
